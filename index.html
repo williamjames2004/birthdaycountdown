@@ -50,7 +50,51 @@
 .countdown-box {
   animation: softPulse 3s infinite ease-in-out;
 }
-
+.box{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0;
+}
+.box video{
+  width: 360px; 
+  border-radius: 25px; 
+  box-shadow: 0 0 25px rgba(0,0,0,0.25);
+}
+.birthdayPopup{
+  position: fixed; 
+  top: 0; left: 0; right:0; bottom:0;
+  background: rgba(0,0,0,0.65);
+  display: none;
+  justify-content: center;
+  align-items: center;
+  animation: fadeIn 1s ease-in-out;
+  z-index: 99;
+}
+.birthdayPopupstyle{
+  background: #fff;
+    padding: 45px 38px;
+    border-radius: 28px;
+    text-align: center;
+    max-width: 580px;
+    box-shadow: 0 0 35px rgba(255, 115, 180, 0.7);
+    animation: popUp 0.8s ease-out;
+}
+.birthdayPopup .birthdayPopupstyle video{
+  width: auto;
+}
+.birthdayPopup .birthdayPopupstyle h2{
+    color:#e60078; font-weight:700; font-size: 32px; margin-bottom: 5px;
+  }
+  .birthdayPopup .birthdayPopupstyle .para1{
+    color:#6a004f; font-size:18px; line-height:1.7; margin-top:18px;
+  }
+  .birthdayPopup .birthdayPopupstyle .para2{
+    color:#5b0040; font-size:18px; line-height:1.7; margin-top:12px;
+  }
+  .birthdayPopup .birthdayPopupstyle .para3{
+    color:#86005e; font-size:18px; line-height:1.7; margin-top:15px;
+  }
 @keyframes glow {
   0% {
     text-shadow: 0 0 10px rgba(255, 0, 140, 0.5), 0 0 20px rgba(255, 0, 200, 0.5);
@@ -68,19 +112,43 @@
 }
 @keyframes popUp {
   0% { transform: scale(0.6); opacity: 0; }
-  100% { transform: scale(1); opacity: 1; }
+  100% { transform: scale(0.8); opacity: 1; }
 }
 @keyframes softPulse {
   0% { transform: scale(1); box-shadow: 0 0 25px rgba(255, 100, 170, 0.3); }
-  50% { transform: scale(1.03); box-shadow: 0 0 45px rgba(255, 150, 200, 0.55); }
+  50% { transform: scale(1.02); box-shadow: 0 0 45px rgba(255, 150, 200, 0.55); }
   100% { transform: scale(1); box-shadow: 0 0 25px rgba(255, 100, 170, 0.3); }
 }
     @media (max-width: 576px) {
   .countdown-box{
-    width: 400px;
+    width: 350px;
   }
   .time{
     font-size: 40px;
+  }
+  .box{
+    flex-direction: column;
+  }
+  .box video{
+    width: 350px;
+  }
+  .birthdayPopup{
+    top: 20px; left: 4;
+  }
+  .birthdayPopup .birthdayPopupstyle video{
+    width: 350px;
+  }
+  .birthdayPopup .birthdayPopupstyle h2{
+    color:#e60078; font-weight:700; font-size: 28px; margin-bottom: 5px;
+  }
+  .birthdayPopup .birthdayPopupstyle .para1{
+    color:#6a004f; font-size:16px; line-height:1.4; margin-top:12px;
+  }
+  .birthdayPopup .birthdayPopupstyle .para2{
+    color:#5b0040; font-size:16px; line-height:1.4; margin-top:12px;
+  }
+  .birthdayPopup .birthdayPopupstyle .para3{
+    color:#86005e; font-size:16px; line-height:1.4; margin-top:12px;
   }
 }
   </style>
@@ -119,44 +187,28 @@
   </div>
 
   <!-- POPUP CELEBRATION MESSAGE -->
-<div id="birthdayPopup" style="
-  position: fixed; 
-  top: 0; left: 0; right:0; bottom:0;
-  background: rgba(0,0,0,0.65);
-  display: none;
-  justify-content: center;
-  align-items: center;
-  animation: fadeIn 1s ease-in-out;
-">
-  <div style="
-    background: #fff;
-    padding: 45px 38px;
-    border-radius: 28px;
-    text-align: center;
-    max-width: 580px;
-    box-shadow: 0 0 35px rgba(255, 115, 180, 0.7);
-    animation: popUp 0.8s ease-out;
-  ">
+<div id="birthdayPopup" class="birthdayPopup">
+  <div class="birthdayPopupstyle">
 
     <!-- 🐼 Panda Holding Heart GIF -->
-    <img src="https://i.imgur.com/zy7qQnl.gif" alt="Panda Love" 
-         style="width:200px; margin-bottom:18px; border-radius:15px;">
-
-    <h2 style="color:#e60078; font-weight:700; font-size: 32px; margin-bottom: 5px;">
+      <video autoplay loop muted playsinline>
+        <source src="assets/happy_birthday.mp4" type="video/mp4">
+      </video>
+    <h2>
       🎉 Happy Birthday ஸ்ரீ 💗
     </h2>
 
-    <p style="color:#6a004f; font-size:18px; line-height:1.7; margin-top:18px;">
+    <p class="para1">
       You are my happiest place.<br>
       My peace. My love. My everything. ❣️
     </p>
 
-    <p style="color:#5b0040; font-size:18px; line-height:1.7; margin-top:12px;">
+    <p class="para2">
       My full of love is always only for <b>you</b> ❤️<br>
       I'll do anything for <b>ஸ்ரீ</b>, now and forever 🤍
     </p>
 
-    <p style="color:#86005e; font-size:18px; line-height:1.7; margin-top:15px;">
+    <p class="para3">
       Thank you for being in my world 💫<br>
       You make everything beautiful just by existing ✨
     </p>
@@ -165,31 +217,48 @@
   </div>
 </div>
 
-  <div class="countdown-box">
-    <h2>Heyyy ஸ்ரீ 💖</h2>
-    <h1>Your Big Day is Loading… 🎂✨</h1>
-    <p>20 November is on the way 😍</p>
-    <hr>
+  <div class="container">
+  <div class="box">
 
-    <div class="row">
-      <div class="col px-0">
-        <div class="time" id="days">00</div>
-        <div class="label">days</div>
-      </div>
-      <div class="col px-0">
-        <div class="time" id="hours">00</div>
-        <div class="label">hours</div>
-      </div>
-      <div class="col px-0">
-        <div class="time" id="minutes">00</div>
-        <div class="label">min</div>
-      </div>
-      <div class="col px-0">
-        <div class="time" id="seconds">00</div>
-        <div class="label">sec</div>
+    <!-- 🐼 Panda Video Section -->
+    <div class="col-md-5 col-12">
+      <video autoplay loop muted playsinline>
+        <source src="assets/hello_panda.mp4" type="video/mp4">
+      </video>
+    </div>
+
+    <!-- ⏳ Countdown Box -->
+    <div class="col-md-5 col-12">
+      <div class="countdown-box">
+        <h2 class="text-start">Heyyy ஸ்ரீ 💖</h2>
+        <h1 class="text-start">Your Big Day is Loading… 🎂✨</h1>
+        <p class="text-start">20 November is on the way 😍</p>
+        <hr>
+
+        <div class="row">
+          <div class="col px-0">
+            <div class="time" id="days">00</div>
+            <div class="label">days</div>
+          </div>
+          <div class="col px-0">
+            <div class="time" id="hours">00</div>
+            <div class="label">hours</div>
+          </div>
+          <div class="col px-0">
+            <div class="time" id="minutes">00</div>
+            <div class="label">min</div>
+          </div>
+          <div class="col px-0">
+            <div class="time" id="seconds">00</div>
+            <div class="label">sec</div>
+          </div>
+        </div>
+
       </div>
     </div>
+
   </div>
+</div>
 
   <!-- Confetti -->
   <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
