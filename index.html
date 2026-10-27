@@ -1,312 +1,1175 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
+  <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#542568">
+  <meta name="description" content="A little magical birthday countdown made with love for Sri.">
   <link rel="shortcut icon" href="assets/favicon.jpg" type="image/x-icon">
-  <title>Sri Birthday Countdown 💗</title>
-
-  <!-- Bootstrap -->
+  <title>For Sri, With Love 💜</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 
   <style>
+    :root {
+      --purple: #653b86;
+      --deep-purple: #3d2058;
+      --lavender: #d8b4fe;
+      --pink: #ffb5d5;
+      --gold: #ffd994;
+      --white: #fffaff;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      min-height: 100%;
+    }
+
     body {
-      background: linear-gradient(135deg, #ff9ecb, #ffd3e8);
-      height: 100vh;
+      position: relative;
+      isolation: isolate;
+      min-height: 100vh;
+      min-height: 100svh;
+      margin: 0;
+      padding: 35px 18px;
       display: flex;
       justify-content: center;
       align-items: center;
       text-align: center;
       font-family: "Poppins", sans-serif;
-      color: #4a003c;
+      color: var(--deep-purple);
+      background: #251332;
+      overflow-x: hidden;
+    }
+
+    /* ========================================
+       SHUFFLED LANDSCAPE BACKGROUND
+    ======================================== */
+
+    .landscape-background {
+      position: fixed;
+      inset: 0;
+      z-index: -2;
+      overflow: hidden;
+      background: #24112f;
+      pointer-events: none;
+    }
+
+    .landscape-slide {
+      position: absolute;
+      inset: 0;
+      background-position: center;
+      background-repeat: no-repeat;
+      background-size: cover;
+      opacity: 0;
+      transform: scale(1.07);
+      transition:
+        opacity 2s ease-in-out,
+        transform 10s linear;
+    }
+
+    .landscape-slide.active {
+      opacity: 1;
+      transform: scale(1);
+    }
+
+    /* Magical purple tint without hiding the photographs */
+    .landscape-background::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        linear-gradient(
+          135deg,
+          rgba(42, 17, 68, 0.40),
+          rgba(93, 38, 87, 0.18),
+          rgba(32, 18, 55, 0.40)
+        );
+    }
+
+    /* ========================================
+       FLOATING MAGICAL LANTERNS
+    ======================================== */
+
+    .magic-sky {
+      position: fixed;
+      inset: 0;
+      overflow: hidden;
+      z-index: -1;
+      pointer-events: none;
+    }
+
+    .lantern {
+      position: absolute;
+      bottom: -100px;
+      width: 27px;
+      height: 39px;
+      border-radius: 48% 48% 42% 42%;
+      background: linear-gradient(
+        180deg,
+        #fff3bf,
+        #ffc86b 55%,
+        #ff9e5e
+      );
+      box-shadow:
+        0 0 15px rgba(255, 207, 116, 0.8),
+        0 0 38px rgba(255, 170, 89, 0.48);
+      opacity: 0;
+      animation: lanternRise 15s linear infinite;
+    }
+
+    .lantern::before {
+      content: "";
+      position: absolute;
+      inset: 5px 7px;
+      border-radius: 50%;
+      border-left: 1px solid rgba(255, 255, 255, 0.8);
+      border-right: 1px solid rgba(255, 255, 255, 0.5);
+    }
+
+    .lantern:nth-child(1) {
+      left: 8%;
+      animation-delay: 0s;
+    }
+
+    .lantern:nth-child(2) {
+      left: 23%;
+      animation-delay: 6s;
+      transform: scale(0.7);
+    }
+
+    .lantern:nth-child(3) {
+      left: 76%;
+      animation-delay: 3s;
+      transform: scale(0.8);
+    }
+
+    .lantern:nth-child(4) {
+      left: 91%;
+      animation-delay: 9s;
+      transform: scale(0.65);
+    }
+
+    .lantern:nth-child(5) {
+      left: 52%;
+      animation-delay: 11s;
+      transform: scale(0.55);
+    }
+
+    @keyframes lanternRise {
+      0% {
+        bottom: -100px;
+        opacity: 0;
+        margin-left: 0;
+      }
+
+      12% {
+        opacity: 0.85;
+      }
+
+      50% {
+        margin-left: 24px;
+      }
+
+      85% {
+        opacity: 0.6;
+      }
+
+      100% {
+        bottom: 115%;
+        opacity: 0;
+        margin-left: -18px;
+      }
+    }
+
+    /* ========================================
+       MAIN LAYOUT
+    ======================================== */
+
+    .page-container {
+      position: relative;
+      z-index: 1;
+      top: 100px;
+      width: 100%;
+      max-width: 1000px;
+      margin: auto;
     }
 
     .countdown-box {
-      width: 500px;
-      background: #fff;
-      padding: 40px;
-      border-radius: 30px;
-      box-shadow: 0 0 35px rgba(0,0,0,0.25);
-      max-width: 500px;
-      animation: fadeIn 1.5s ease-in-out;
+      position: relative;
+      width: 100%;
+      max-width: 850px;
+      margin: auto;
+      padding: 48px 48px 38px;
+      overflow: hidden;
+      border: 1px solid rgba(255, 255, 255, 0.68);
+      border-radius: 35px;
+
+      /* Translucent glass instead of solid white */
+      background: rgba(255, 247, 255, 0.314);
+      -webkit-backdrop-filter: blur(15px);
+      backdrop-filter: blur(5px);
+
+      box-shadow:
+        0 20px 70px rgba(26, 7, 44, 0.28),
+        0 0 45px rgba(255, 200, 238, 0.18),
+        inset 0 1px 0 rgba(255, 255, 255, 0.9);
+
+      animation: cardEntrance 1.2s ease both;
     }
 
-    h1 { font-weight: 700; }
-    .time {
-  font-size: 58px;
-  font-weight: 800;
-  color: #ff006f;
-  font-family: "Poppins", sans-serif;
-  text-shadow: 0 0 15px rgba(255, 0, 128, 0.55), 0 0 40px rgba(255, 0, 170, 0.65);
-  animation: glow 2s ease-in-out infinite;
-}
+    .countdown-box::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 12%;
+      width: 76%;
+      height: 3px;
+      border-radius: 50%;
+      background: linear-gradient(
+        90deg,
+        transparent,
+        #dca7ff,
+        #ffd58e,
+        #ffafd4,
+        transparent
+      );
+    }
 
-.label {
-  font-size: 15px;
-  letter-spacing: 1.5px;
-  text-transform: uppercase;
-  color: #7a004d;
-  font-weight: 600;
-}
-.countdown-box {
-  animation: softPulse 3s infinite ease-in-out;
-}
-.box{
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 50px;
-}
-.box video{
-  width: 360px; 
-  border-radius: 25px; 
-  box-shadow: 0 0 25px rgba(0,0,0,0.25);
-}
-.birthdayPopup{
-  position: fixed; 
-  top: 0; left: 0; right:0; bottom:0;
-  background: rgba(0,0,0,0.65);
-  display: none;
-  justify-content: center;
-  align-items: center;
-  animation: fadeIn 1s ease-in-out;
-  z-index: 99;
-}
-.birthdayPopupstyle{
-  background: #fff;
-    padding: 45px 38px;
-    border-radius: 28px;
-    text-align: center;
-    max-width: 580px;
-    box-shadow: 0 0 35px rgba(255, 115, 180, 0.7);
-    animation: popUp 0.8s ease-out;
-}
-.birthdayPopup .birthdayPopupstyle video{
-  width: auto;
-}
-.birthdayPopup .birthdayPopupstyle h2{
-    color:#e60078; font-weight:700; font-size: 32px; margin-bottom: 5px;
-  }
-  .birthdayPopup .birthdayPopupstyle .para1{
-    color:#6a004f; font-size:18px; line-height:1.7; margin-top:18px;
-  }
-  .birthdayPopup .birthdayPopupstyle .para2{
-    color:#5b0040; font-size:18px; line-height:1.7; margin-top:12px;
-  }
-  .birthdayPopup .birthdayPopupstyle .para3{
-    color:#86005e; font-size:18px; line-height:1.7; margin-top:15px;
-  }
-@keyframes glow {
-  0% {
-    text-shadow: 0 0 10px rgba(255, 0, 140, 0.5), 0 0 20px rgba(255, 0, 200, 0.5);
-  }
-  50% {
-    text-shadow: 0 0 20px rgba(255, 0, 150, 0.9), 0 0 50px rgba(255, 0, 220, 0.9);
-  }
-  100% {
-    text-shadow: 0 0 10px rgba(255, 0, 140, 0.5), 0 0 20px rgba(255, 0, 200, 0.5);
-  }
-}
-@keyframes fadeIn {
-  from { opacity: 0; transform: scale(0.9); }
-  to { opacity: 1; transform: scale(1); }
-}
-@keyframes popUp {
-  0% { transform: scale(0.6); opacity: 0; }
-  100% { transform: scale(0.8); opacity: 1; }
-}
-@keyframes softPulse {
-  0% { transform: scale(1); box-shadow: 0 0 25px rgba(255, 100, 170, 0.3); }
-  50% { transform: scale(1.02); box-shadow: 0 0 45px rgba(255, 150, 200, 0.55); }
-  100% { transform: scale(1); box-shadow: 0 0 25px rgba(255, 100, 170, 0.3); }
-}
-    @media (max-width: 576px) {
-  .countdown-box{
-    width: 350px;
-  }
-  .time{
-    font-size: 40px;
-  }
-  .box{
-    flex-direction: column;
-    gap: 5px;
-  }
-  .box video{
-    width: 320px;
-  }
-  .birthdayPopup{
-    top: 0; left: 4;
-  }
-  .birthdayPopup .birthdayPopupstyle video{
-    width: 280px;
-  }
-  .birthdayPopup .birthdayPopupstyle h2{
-    color:#e60078; font-weight:700; font-size: 28px; margin-bottom: 5px;
-  }
-  .birthdayPopup .birthdayPopupstyle .para1{
-    color:#6a004f; font-size:16px; line-height:1.4; margin-top:12px;
-  }
-  .birthdayPopup .birthdayPopupstyle .para2{
-    color:#5b0040; font-size:16px; line-height:1.4; margin-top:12px;
-  }
-  .birthdayPopup .birthdayPopupstyle .para3{
-    color:#86005e; font-size:16px; line-height:1.4; margin-top:12px;
-  }
-}
+    .countdown-box::after {
+      content: "✦";
+      position: absolute;
+      top: 17px;
+      right: 24px;
+      color: #d6a4eb;
+      font-size: 25px;
+      animation: twinkle 3s ease-in-out infinite;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 9px;
+      margin-bottom: 17px;
+      padding: 8px 17px;
+      border: 1px solid rgba(150, 91, 177, 0.18);
+      border-radius: 50px;
+      background: rgba(230, 207, 255, 0.46);
+      color: #73438b;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 2.3px;
+      text-transform: uppercase;
+    }
+
+    .eyebrow span {
+      color: #ff007b;
+      font-size: 14px;
+    }
+
+    .greeting {
+      margin: 0 0 5px;
+      color: #ff00aa;
+      font-family: "Cormorant Garamond", serif;
+      font-size: clamp(30px, 4vw, 43px);
+      font-weight: 600;
+    }
+
+    .main-heading {
+      margin: 0;
+      background: linear-gradient(
+        120deg,
+        #643b83,
+        #ad579b 48%,
+        #bd7b59
+      );
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+      font-family: "Cormorant Garamond", serif;
+      font-size: clamp(38px, 5.4vw, 62px);
+      font-weight: 700;
+      line-height: 1.05;
+    }
+
+    .subtitle {
+      margin: 15px 0 0;
+      color: #775e83;
+      font-size: 14px;
+      font-weight: 400;
+      line-height: 1.8;
+    }
+
+    .subtitle strong {
+      color: #b24c8b;
+      font-weight: 600;
+    }
+
+    .love-divider {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 13px;
+      margin: 26px 0;
+      color: #c68ebd;
+    }
+
+    .love-divider::before,
+    .love-divider::after {
+      content: "";
+      width: 90px;
+      max-width: 25%;
+      height: 1px;
+      background: linear-gradient(
+        90deg,
+        transparent,
+        rgba(176, 119, 190, 0.65)
+      );
+    }
+
+    .love-divider::after {
+      transform: rotate(180deg);
+    }
+
+    .love-divider span {
+      font-size: 18px;
+      animation: heartbeat 2s ease-in-out infinite;
+    }
+
+    /* ========================================
+       COUNTDOWN DIGITS
+    ======================================== */
+
+    .countdown-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 13px;
+    }
+
+    .time-card {
+      position: relative;
+      padding: 19px 5px 16px;
+      overflow: hidden;
+      border: 1px solid rgba(255, 255, 255, 0.9);
+      border-radius: 22px;
+      background: rgba(255, 255, 255, 0.52);
+      box-shadow:
+        0 5px 20px rgba(100, 52, 126, 0.07),
+        inset 0 1px 0 rgba(255, 255, 255, 0.8);
+      transition:
+        transform 0.3s ease,
+        background 0.3s ease,
+        box-shadow 0.3s ease;
+    }
+
+    .time-card:hover {
+      transform: translateY(-5px);
+      background: rgba(255, 255, 255, 0.8);
+      box-shadow: 0 12px 25px rgba(126, 63, 153, 0.13);
+    }
+
+    .time {
+      color: #8b4ca9;
+      font-size: clamp(30px, 5vw, 52px);
+      font-weight: 800;
+      font-variant-numeric: tabular-nums;
+      line-height: 1.15;
+      text-shadow: 0 2px 18px rgba(190, 128, 223, 0.18);
+    }
+
+    .label {
+      margin-top: 9px;
+      color: #96769f;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+    }
+
+    .bottom-message {
+      margin: 27px 0 0;
+      color: #84658d;
+      font-family: "Cormorant Garamond", serif;
+      font-size: 23px;
+      font-style: italic;
+      font-weight: 600;
+    }
+
+    .bottom-message span {
+      color: #e47eae;
+    }
+
+    .signature {
+      margin-top: 11px;
+      color: #ac8eb3;
+      font-size: 10px;
+      font-weight: 500;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+    }
+
+    /* ========================================
+       MUSIC START SCREEN
+    ======================================== */
+
+    #musicPopup {
+      position: fixed;
+      inset: 0;
+      z-index: 999;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 22px;
+      background:
+        radial-gradient(
+          circle at 50% 40%,
+          rgba(100, 56, 127, 0.84),
+          rgba(24, 11, 39, 0.97)
+        );
+      -webkit-backdrop-filter: blur(10px);
+      backdrop-filter: blur(10px);
+      transition: opacity 0.7s ease, visibility 0.7s ease;
+    }
+
+    #musicPopup.hidden {
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+    }
+
+    .music-card {
+      width: 100%;
+      max-width: 440px;
+      padding: 42px 28px;
+      border: 1px solid rgba(255, 230, 255, 0.24);
+      border-radius: 32px;
+      background: rgba(255, 245, 255, 0.09);
+      box-shadow: 0 20px 80px rgba(0, 0, 0, 0.2);
+      animation: cardEntrance 1s ease both;
+    }
+
+    .music-heart {
+      margin-bottom: 15px;
+      color: #ffd2e8;
+      font-size: 48px;
+      animation: heartbeat 2s ease-in-out infinite;
+    }
+
+    .music-title {
+      margin-bottom: 10px;
+      color: #fff1ff;
+      font-family: "Cormorant Garamond", serif;
+      font-size: 40px;
+      font-weight: 700;
+    }
+
+    .music-description {
+      margin-bottom: 27px;
+      color: rgba(255, 239, 255, 0.78);
+      font-size: 13px;
+      line-height: 1.9;
+    }
+
+    .music-button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      width: 100%;
+      padding: 16px 20px;
+      border: 1px solid rgba(255, 255, 255, 0.55);
+      border-radius: 50px;
+      background: linear-gradient(110deg, #f5b1d5, #e2b7ff, #ffe1a5);
+      color: #512c69;
+      font-family: "Poppins", sans-serif;
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+      box-shadow: 0 7px 25px rgba(221, 158, 255, 0.19);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .music-button:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 12px 35px rgba(221, 158, 255, 0.35);
+    }
+
+    .music-button:focus-visible {
+      outline: 3px solid white;
+      outline-offset: 4px;
+    }
+
+    /* ========================================
+       BIRTHDAY CELEBRATION POPUP
+    ======================================== */
+
+    .birthdayPopup {
+      position: fixed;
+      inset: 0;
+      z-index: 1000;
+      display: none;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+      overflow-y: auto;
+      background: rgba(24, 9, 36, 0.76);
+      -webkit-backdrop-filter: blur(9px);
+      backdrop-filter: blur(9px);
+    }
+
+    .birthdayPopup.show {
+      display: flex;
+      animation: fadeIn 0.7s ease both;
+    }
+
+    .birthdayPopupstyle {
+      position: relative;
+      width: 100%;
+      max-width: 570px;
+      max-height: calc(100svh - 40px);
+      overflow-y: auto;
+      padding: 32px 38px;
+      border: 1px solid rgba(255, 255, 255, 0.82);
+      border-radius: 32px;
+      background: rgba(255, 246, 255, 0.94);
+      box-shadow:
+        0 25px 90px rgba(0, 0, 0, 0.3),
+        0 0 40px rgba(255, 174, 223, 0.16);
+      animation: popUp 0.65s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+    }
+
+    .birthdayPopupstyle video {
+      display: block;
+      width: auto;
+      max-width: 100%;
+      max-height: 230px;
+      margin: 0 auto 12px;
+      border-radius: 20px;
+      object-fit: contain;
+    }
+
+    .birthdayPopupstyle h2 {
+      margin: 10px 0;
+      color: #a44491;
+      font-family: "Cormorant Garamond", serif;
+      font-size: 37px;
+      font-weight: 700;
+    }
+
+    .birthdayPopupstyle .para1,
+    .birthdayPopupstyle .para2,
+    .birthdayPopupstyle .para3 {
+      font-size: 14px;
+      line-height: 1.9;
+    }
+
+    .birthdayPopupstyle .para1 {
+      margin-top: 16px;
+      color: #79518b;
+    }
+
+    .birthdayPopupstyle .para2 {
+      margin-top: 12px;
+      color: #8d477b;
+    }
+
+    .birthdayPopupstyle .para3 {
+      margin-top: 12px;
+      color: #95619b;
+    }
+
+    .birthdayPopupstyle b {
+      color: #d3488e;
+    }
+
+    .celebration-hearts {
+      margin-top: 20px;
+      font-size: 24px;
+      letter-spacing: 5px;
+      animation: heartbeat 2s ease-in-out infinite;
+    }
+
+    .close-celebration {
+      margin-top: 20px;
+      padding: 10px 23px;
+      border: 1px solid rgba(145, 81, 165, 0.2);
+      border-radius: 50px;
+      background: rgba(228, 199, 255, 0.55);
+      color: #724483;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+
+    .close-celebration:hover {
+      background: rgba(228, 199, 255, 0.9);
+    }
+
+    /* ========================================
+       ANIMATIONS
+    ======================================== */
+
+    @keyframes cardEntrance {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    @keyframes popUp {
+      from {
+        opacity: 0;
+        transform: scale(0.92) translateY(15px);
+      }
+
+      to {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+      }
+    }
+
+    @keyframes heartbeat {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.12); }
+    }
+
+    @keyframes twinkle {
+      0%, 100% {
+        opacity: 0.6;
+        transform: rotate(0deg) scale(0.9);
+      }
+
+      50% {
+        opacity: 1;
+        transform: rotate(25deg) scale(1.2);
+      }
+    }
+
+    /* ========================================
+       RESPONSIVE DESIGN
+    ======================================== */
+
+    @media (max-width: 768px) {
+      body {
+        padding: 25px 15px;
+      }
+
+      .countdown-box {
+        max-width: 590px;
+        padding: 38px 27px 30px;
+        border-radius: 28px;
+        background: rgba(255, 255, 255, 0.49);
+        -webkit-backdrop-filter: blur(12px);
+        backdrop-filter: blur(12px);
+      }
+
+      .countdown-grid {
+        gap: 9px;
+      }
+
+      .time-card {
+        padding: 17px 3px 14px;
+        border-radius: 17px;
+      }
+
+      .label {
+        font-size: 9px;
+        letter-spacing: 1px;
+      }
+
+      .bottom-message {
+        font-size: 21px;
+      }
+    }
+
+    @media (max-width: 420px) {
+      body {
+        padding: 18px 12px;
+      }
+
+      .countdown-box {
+        padding: 34px 15px 25px;
+        border-radius: 24px;
+      }
+
+      .countdown-box::after {
+        top: 12px;
+        right: 15px;
+        font-size: 19px;
+      }
+
+      .eyebrow {
+        gap: 6px;
+        padding: 7px 11px;
+        font-size: 9px;
+        letter-spacing: 1.4px;
+      }
+
+      .greeting {
+        font-size: 31px;
+      }
+
+      .main-heading {
+        font-size: clamp(34px, 9vw, 39px);
+      }
+
+      .subtitle {
+        font-size: 12px;
+      }
+
+      .love-divider {
+        margin: 21px 0;
+      }
+
+      .countdown-grid {
+        gap: 6px;
+      }
+
+      .time-card {
+        padding: 15px 2px 12px;
+        border-radius: 13px;
+      }
+
+      .time {
+        font-size: clamp(23px, 7vw, 30px);
+      }
+
+      .label {
+        margin-top: 7px;
+        font-size: 8px;
+        letter-spacing: 0.6px;
+      }
+
+      .bottom-message {
+        margin-top: 22px;
+        font-size: 19px;
+      }
+
+      .signature {
+        font-size: 8px;
+        letter-spacing: 1.5px;
+      }
+
+      .birthdayPopupstyle {
+        padding: 25px 19px;
+        border-radius: 25px;
+      }
+
+      .birthdayPopupstyle video {
+        max-height: 175px;
+      }
+
+      .birthdayPopupstyle h2 {
+        font-size: 30px;
+      }
+
+      .birthdayPopupstyle .para1,
+      .birthdayPopupstyle .para2,
+      .birthdayPopupstyle .para3 {
+        font-size: 12px;
+        line-height: 1.7;
+      }
+
+      .music-card {
+        padding: 34px 22px;
+      }
+
+      .music-title {
+        font-size: 34px;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *,
+      *::before,
+      *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+      }
+    }
   </style>
 </head>
 
 <body>
 
-  <!-- Soft Background Music -->
-  <audio id="bgMusic" loop>
-    <source src="https://raw.githubusercontent.com/williamjames2004/birthdaycountdown/refs/heads/main/assets/music.mp3" type="audio/mp3">
-  </audio>
-
-  <!-- MUSIC START POPUP -->
-  <div id="musicPopup" style="
-    position: fixed;
-    top:0; left:0; right:0; bottom:0;
-    background: rgba(0, 0, 0, 0.922);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 999;
-  ">
-    <button id="musicButton" style="
-      background: #ff4f9e; 
-      color: white;
-      border: none; 
-      padding: 18px 40px;
-      font-size: 18px;
-      border-radius: 50px;
-      cursor: pointer; 
-      box-shadow: 0 0 15px rgba(0,0,0,0.35);
-      animation: popUp 0.7s ease-out;
-    ">
-      🎶 Tap to Start the Vibe 💗
-    </button>
+  <!-- Background slideshow -->
+  <div class="landscape-background" id="landscapeBackground" aria-hidden="true">
+    <div class="landscape-slide active"></div>
+    <div class="landscape-slide"></div>
   </div>
 
-  <!-- POPUP CELEBRATION MESSAGE -->
-<div id="birthdayPopup" class="birthdayPopup">
-  <div class="birthdayPopupstyle">
+  <!-- Floating lantern decorations -->
+  <div class="magic-sky" aria-hidden="true">
+    <div class="lantern"></div>
+    <div class="lantern"></div>
+    <div class="lantern"></div>
+    <div class="lantern"></div>
+    <div class="lantern"></div>
+  </div>
 
-    <!-- 🐼 Panda Holding Heart GIF -->
+  <!-- Background music -->
+  <!-- <audio id="bgMusic" loop preload="auto">
+    <source src="https://raw.githubusercontent.com/williamjames2004/birthdaycountdown/refs/heads/main/assets/music.mp3" type="audio/mpeg">
+  </audio> -->
+  <audio id="bgMusic" loop preload="auto">
+    <source src="assets/music.mp3" type="audio/mpeg">
+  </audio>
+
+  <!-- Music start screen -->
+  <div id="musicPopup">
+    <div class="music-card">
+      <div class="music-heart">♡</div>
+
+      <h1 class="music-title">A Little Magic for You</h1>
+
+      <p class="music-description">
+        A sky full of lanterns.<br>
+        A heart full of love.<br>
+        And a little surprise made just for you. ✨
+      </p>
+
+      <button id="musicButton" class="music-button" type="button">
+        <span>♫</span> Open Your Little Universe <span>♡</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Main countdown -->
+  <main class="page-container">
+    <section class="countdown-box" aria-label="Sri's birthday countdown">
+
+      <div class="eyebrow">
+        <span>✧</span>
+        MADE WITH ALL MY LOVE
+        <span>✧</span>
+      </div>
+
+      <p class="greeting">Heyyy, my ஸ்ரீ 💗</p>
+
+      <div class="love-divider">
+        <span>♡</span>
+      </div>
+
+      <div class="countdown-grid">
+        <div class="time-card">
+          <div class="time" id="days">00</div>
+          <div class="label">Days</div>
+        </div>
+
+        <div class="time-card">
+          <div class="time" id="hours">00</div>
+          <div class="label">Hours</div>
+        </div>
+
+        <div class="time-card">
+          <div class="time" id="minutes">00</div>
+          <div class="label">Minutes</div>
+        </div>
+
+        <div class="time-card">
+          <div class="time" id="seconds">00</div>
+          <div class="label">Seconds</div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Birthday celebration -->
+  <div id="birthdayPopup" class="birthdayPopup" role="dialog"
+       aria-modal="true" aria-labelledby="birthdayTitle">
+
+    <div class="birthdayPopupstyle">
+
       <video autoplay loop muted playsinline>
         <source src="assets/happy_birthday.mp4" type="video/mp4">
       </video>
-    <h2>
-      🎉 Happy Birthday ஸ்ரீ 💗
-    </h2>
 
-    <p class="para1">
-      You are my happiest place.<br>
-      My peace. My love. My everything. ❣️
-    </p>
+      <h2 id="birthdayTitle">Happy Birthday ஸ்ரீ 💗</h2>
 
-    <p class="para2">
-      My full of love is always only for <b>you</b> ❤️<br>
-      I'll do anything for <b>ஸ்ரீ</b>, now and forever 🤍
-    </p>
+      <p class="para1">
+        You are my happiest place.<br>
+        My peace. My love. My everything. ❣️
+      </p>
 
-    <p class="para3">
-      Thank you for being in my world 💫<br>
-      You make everything beautiful just by existing ✨
-    </p>
+      <p class="para2">
+        My full of love is always only for <b>you</b> ❤️<br>
+        I'll do anything for <b>ஸ்ரீ</b>, now and forever 🤍
+      </p>
 
-    <div style="margin-top:22px; font-size:25px;">💖🐼✨</div>
-  </div>
-</div>
+      <p class="para3">
+        Thank you for being in my world 💫<br>
+        You make everything beautiful just by existing ✨
+      </p>
 
-  <div class="container">
-  <div class="box">
+      <div class="celebration-hearts">💖 🐼 ✨</div>
 
-    <!-- 🐼 Panda Video Section -->
-    <div class="box1">
-      <video autoplay loop muted playsinline>
-        <source src="assets/hello_panda.mp4" type="video/mp4">
-      </video>
+      <button class="close-celebration" id="closeBirthday" type="button">
+        Keep this little moment ♡
+      </button>
     </div>
-
-    <!-- ⏳ Countdown Box -->
-    <div class="box2">
-      <div class="countdown-box">
-        <h2 class="text-start">Heyyy ஸ்ரீ 💖</h2>
-        <h1 class="text-start">Your Big Day is Loading… 🎂✨</h1>
-        <p class="text-start">20 November is on the way 😍</p>
-        <hr>
-
-        <div class="row">
-          <div class="col px-0">
-            <div class="time" id="days">00</div>
-            <div class="label">days</div>
-          </div>
-          <div class="col px-0">
-            <div class="time" id="hours">00</div>
-            <div class="label">hours</div>
-          </div>
-          <div class="col px-0">
-            <div class="time" id="minutes">00</div>
-            <div class="label">min</div>
-          </div>
-          <div class="col px-0">
-            <div class="time" id="seconds">00</div>
-            <div class="label">sec</div>
-          </div>
-        </div>
-
-      </div>
-    </div>
-
   </div>
-</div>
 
   <!-- Confetti -->
   <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
 
   <script>
-    const targetDate = new Date("November 20, 2025 00:00:00").getTime();
+/* ========================================
+   RESPONSIVE SHUFFLED BACKGROUND SLIDESHOW
+======================================== */
+
+const landscapeImages = [
+  "1.jpg", "2.jpg", "3.jpg", "4.jpg", "5.jpg",
+  "6.jpg", "7.jpg", "8.jpeg", "9.jpg", "10.jpeg",
+  "11.jpeg", "12.jpg", "13.jpeg", "14.jpg", "15.jpg",
+  "16.jpg", "17.jpg", "18.jpg", "19.jpg", "20.jpeg"
+].map(file => `assets/landscape/${file}`);
+
+const portraitImages = [
+  "1.jpg", "2.jpg", "3.jpeg", "4.jpeg", "5.jpeg",
+  "6.jpeg", "7.jpeg", "8.jpeg", "9.jpeg", "10.jpeg",
+  "11.jpeg", "12.jpeg", "13.jpg", "14.jpeg", "15.jpeg",
+  "16.jpeg", "17.jpeg", "18.jpeg", "19.jpeg", "20.jpg"
+].map(file => `assets/potrait/${file}`);
+
+const slides = document.querySelectorAll(".landscape-slide");
+
+let currentSlide = 0;
+let imageOrder = [];
+let imageIndex = 0;
+let previousImage = "";
+let slideshowTimer;
+let isPortrait = window.matchMedia("(orientation: portrait)").matches;
+
+function getImages() {
+  return isPortrait ? portraitImages : landscapeImages;
+}
+
+function shuffleImages() {
+  imageOrder = [...getImages()];
+
+  // Shuffle randomly
+  for (let i = imageOrder.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [imageOrder[i], imageOrder[j]] = [imageOrder[j], imageOrder[i]];
+  }
+
+  // Avoid repeating the last image at the shuffle boundary
+  if (imageOrder.length > 1 && imageOrder[0] === previousImage) {
+    const j = 1 + Math.floor(Math.random() * (imageOrder.length - 1));
+    [imageOrder[0], imageOrder[j]] = [imageOrder[j], imageOrder[0]];
+  }
+
+  imageIndex = 0;
+}
+
+function showNextImage() {
+  clearTimeout(slideshowTimer);
+
+  if (imageIndex >= imageOrder.length) {
+    shuffleImages();
+  }
+
+  const image = imageOrder[imageIndex++];
+  const nextSlide = 1 - currentSlide;
+  const preload = new Image();
+
+  preload.onload = () => {
+    // Ignore a pending image if orientation changed while loading
+    if (isPortrait !== window.matchMedia("(orientation: portrait)").matches) {
+      handleOrientationChange();
+      return;
+    }
+
+    slides[nextSlide].style.backgroundImage = `url("${image}")`;
+    slides[nextSlide].classList.add("active");
+    slides[currentSlide].classList.remove("active");
+
+    currentSlide = nextSlide;
+    previousImage = image;
+
+    // Show each image for 10 seconds
+    slideshowTimer = setTimeout(showNextImage, 10000);
+  };
+
+  preload.onerror = () => {
+    console.error("Unable to load image:", image);
+
+    if (imageIndex >= imageOrder.length) {
+      shuffleImages();
+    }
+
+    showNextImage();
+  };
+
+  preload.src = image;
+}
+
+function handleOrientationChange() {
+  const newIsPortrait =
+    window.matchMedia("(orientation: portrait)").matches;
+
+  if (newIsPortrait === isPortrait) return;
+
+  isPortrait = newIsPortrait;
+
+  clearTimeout(slideshowTimer);
+
+  // Start a fresh shuffled sequence for the new orientation
+  previousImage = "";
+  shuffleImages();
+  showNextImage();
+}
+
+// Detect phone rotation and browser resizing
+window.addEventListener("resize", handleOrientationChange);
+window.addEventListener("orientationchange", handleOrientationChange);
+
+// Start slideshow
+shuffleImages();
+showNextImage();
+
+
+    /* ========================================
+       MUSIC START
+    ======================================== */
+
     const music = document.getElementById("bgMusic");
     const musicPopup = document.getElementById("musicPopup");
     const musicButton = document.getElementById("musicButton");
 
-    musicButton.addEventListener("click", function() {
-      music.play();
-      musicPopup.style.display = "none"; // Hide popup after click
-    });
+    musicButton.addEventListener("click", async () => {
+      musicButton.disabled = true;
+      musicButton.innerHTML = "♫ Opening your little universe...";
 
-    setInterval(function() {
-      const now = new Date().getTime();
-      const diff = targetDate - now;
-
-      if (diff <= 0) {
-        // Show birthday popup
-        document.getElementById("birthdayPopup").style.display = "flex";
-
-        // Confetti celebration loop
-        let duration = 1500;
-        let end = Date.now() + duration;
-        (function frame() {
-          confetti({ particleCount: 8, spread: 120, origin: { y: 0.7 } });
-          if (Date.now() < end) requestAnimationFrame(frame);
-        })();
+      try {
+        await music.play();
+      } catch (error) {
+        console.warn("Music could not start:", error);
+        musicButton.innerHTML = "♫ Continue to your surprise ♡";
+        musicButton.disabled = false;
         return;
       }
 
-      const days = Math.floor(diff / (1000 * 60 * 60 * 24));
-      const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-      const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-      const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+      musicPopup.classList.add("hidden");
+    });
 
-      document.getElementById("days").innerHTML = days.toString().padStart(2, "0")+":";
-      document.getElementById("hours").innerHTML = hours.toString().padStart(2, "0")+":";
-      document.getElementById("minutes").innerHTML = minutes.toString().padStart(2, "0")+":";
-      document.getElementById("seconds").innerHTML = seconds.toString().padStart(2, "0");
-    }, 1000);
+
+    /* ========================================
+       BIRTHDAY COUNTDOWN
+    ======================================== */
+
+    // November 20, 2026 at midnight in the visitor's local timezone
+    const targetDate = new Date(2026, 10, 20, 0, 0, 0).getTime();
+
+    const daysElement = document.getElementById("days");
+    const hoursElement = document.getElementById("hours");
+    const minutesElement = document.getElementById("minutes");
+    const secondsElement = document.getElementById("seconds");
+
+    const birthdayPopup = document.getElementById("birthdayPopup");
+    const closeBirthday = document.getElementById("closeBirthday");
+
+    let birthdayShown = false;
+    let countdownTimer;
+
+    function updateCountdown() {
+      const now = Date.now();
+      const diff = targetDate - now;
+
+      if (diff <= 0) {
+        daysElement.textContent = "00";
+        hoursElement.textContent = "00";
+        minutesElement.textContent = "00";
+        secondsElement.textContent = "00";
+
+        clearInterval(countdownTimer);
+
+        if (!birthdayShown) {
+          birthdayShown = true;
+          birthdayPopup.classList.add("show");
+
+          // A single confetti celebration instead of repeated bursts
+          if (typeof confetti === "function") {
+            confetti({
+              particleCount: 150,
+              spread: 110,
+              origin: { y: 0.65 },
+              colors: [
+                "#ffb5d5",
+                "#d8b4fe",
+                "#ffd994",
+                "#ffffff",
+                "#d88ac7"
+              ]
+            });
+
+            setTimeout(() => {
+              confetti({
+                particleCount: 90,
+                spread: 130,
+                origin: { y: 0.65 },
+                colors: [
+                  "#ffb5d5",
+                  "#d8b4fe",
+                  "#ffd994",
+                  "#ffffff"
+                ]
+              });
+            }, 600);
+          }
+        }
+
+        return;
+      }
+
+      const days = Math.floor(diff / 86400000);
+      const hours = Math.floor((diff % 86400000) / 3600000);
+      const minutes = Math.floor((diff % 3600000) / 60000);
+      const seconds = Math.floor((diff % 60000) / 1000);
+
+      daysElement.textContent = String(days).padStart(2, "0");
+      hoursElement.textContent = String(hours).padStart(2, "0");
+      minutesElement.textContent = String(minutes).padStart(2, "0");
+      secondsElement.textContent = String(seconds).padStart(2, "0");
+    }
+
+    updateCountdown();
+    countdownTimer = setInterval(updateCountdown, 1000);
+
+    closeBirthday.addEventListener("click", () => {
+      birthdayPopup.classList.remove("show");
+    });
+
+    birthdayPopup.addEventListener("click", event => {
+      if (event.target === birthdayPopup) {
+        birthdayPopup.classList.remove("show");
+      }
+    });
+
+    document.addEventListener("keydown", event => {
+      if (event.key === "Escape") {
+        birthdayPopup.classList.remove("show");
+      }
+    });
   </script>
 
 </body>
-
 </html>
-
