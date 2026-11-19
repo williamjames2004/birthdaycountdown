@@ -1,8 +1,3 @@
-
-/* ========================================
-   RESPONSIVE BACKGROUND SLIDESHOW
-======================================== */
-
 const landscapeImages = [
     "1.jpg", "2.jpg", "3.jpg", "4.jpg", "5.jpg",
     "6.jpg", "7.jpg", "8.jpeg", "9.jpg", "10.jpeg",
@@ -25,60 +20,35 @@ let imageIndex = 0;
 let previousImage = "";
 let slideshowTimer;
 
-let isPortrait =
-    window.matchMedia("(orientation: portrait)").matches;
-
-
+let isPortrait = window.matchMedia("(orientation: portrait)").matches;
 function getImages() {
     return isPortrait ? portraitImages : landscapeImages;
 }
-
-
 function shuffleImages() {
-
     imageOrder = [...getImages()];
-
     for (let i = imageOrder.length - 1; i > 0; i--) {
-
         const j = Math.floor(Math.random() * (i + 1));
-
-        [imageOrder[i], imageOrder[j]] =
-            [imageOrder[j], imageOrder[i]];
-
+        [imageOrder[i], imageOrder[j]] = [imageOrder[j], imageOrder[i]];
     }
-
-    // Avoid repeating the previous image
     if (imageOrder.length > 1 && imageOrder[0] === previousImage) {
-
         const j = 1 + Math.floor(
             Math.random() * (imageOrder.length - 1)
         );
-
-        [imageOrder[0], imageOrder[j]] =
-            [imageOrder[j], imageOrder[0]];
-
+        [imageOrder[0], imageOrder[j]] = [imageOrder[j], imageOrder[0]];
     }
-
     imageIndex = 0;
 }
 
-
 function showNextImage() {
-
     clearTimeout(slideshowTimer);
-
     if (imageIndex >= imageOrder.length) {
         shuffleImages();
     }
 
     const image = imageOrder[imageIndex++];
     const nextSlide = 1 - currentSlide;
-
     const preload = new Image();
-
     preload.onload = () => {
-
-        // Handle orientation changes during image loading
         if (
             isPortrait !==
             window.matchMedia("(orientation: portrait)").matches
@@ -86,165 +56,99 @@ function showNextImage() {
             handleOrientationChange();
             return;
         }
-
-        slides[nextSlide].style.backgroundImage =
-            `url("${image}")`;
-
+        slides[nextSlide].style.backgroundImage =`url("${image}")`;
         slides[nextSlide].classList.add("active");
         slides[currentSlide].classList.remove("active");
-
         currentSlide = nextSlide;
         previousImage = image;
-
-        // Display each image for 10 seconds
         slideshowTimer = setTimeout(showNextImage, 10000);
-
     };
-
     preload.onerror = () => {
-
         console.error("Unable to load image:", image);
-
         if (imageIndex >= imageOrder.length) {
             shuffleImages();
         }
-
         showNextImage();
 
     };
-
     preload.src = image;
 }
 
-
 function handleOrientationChange() {
-
-    const newIsPortrait =
-        window.matchMedia("(orientation: portrait)").matches;
-
+    const newIsPortrait = window.matchMedia("(orientation: portrait)").matches;
     if (newIsPortrait === isPortrait) return;
-
     isPortrait = newIsPortrait;
-
     clearTimeout(slideshowTimer);
-
     previousImage = "";
-
     shuffleImages();
     showNextImage();
-
 }
 
-
-// Detect phone rotation and browser resizing
 window.addEventListener("resize", handleOrientationChange);
 window.addEventListener("orientationchange", handleOrientationChange);
-
-// Start slideshow
 shuffleImages();
 showNextImage();
-
-
 /* ========================================
    TARGET DATE
 ======================================== */
-
 // November 19, 2026 at 6:29 PM
 // Uses the visitor's local timezone.
 // Change this to Sri's actual birthday date before deployment.
 
-const targetDate =
-    new Date(2026, 10, 20, 0, 0, 0).getTime();
-
-
-/* ========================================
-   ELEMENT REFERENCES
-======================================== */
-
+const targetDate = new Date(2026, 10, 20, 0, 0, 0).getTime();
 const music = document.getElementById("bgMusic");
 const lastTenMusic = document.getElementById("lastTenMusic");
 
 const musicPopup = document.getElementById("musicPopup");
 const musicButton = document.getElementById("musicButton");
 
-const birthdayPopup =
-    document.getElementById("birthdayPopup");
+const birthdayPopup = document.getElementById("birthdayPopup");
+const birthdayGreeting = document.getElementById("birthdayGreeting");
 
-const birthdayGreeting =
-    document.getElementById("birthdayGreeting");
-
-const tagElement =
-    birthdayGreeting.querySelector(".tag");
-
-const lastTenElement =
-    birthdayGreeting.querySelector(".lastten");
-
+const tagElement = birthdayGreeting.querySelector(".tag");
+const lastTenElement = birthdayGreeting.querySelector(".lastten");
 const daysElement = document.getElementById("days");
 const hoursElement = document.getElementById("hours");
 const minutesElement = document.getElementById("minutes");
 const secondsElement = document.getElementById("seconds");
 
-
-/* ========================================
-   GLOBAL STATES
-======================================== */
-
 let musicStarted = false;
 let birthdayShown = false;
 let birthdayReached = false;
-
 let countdownTimer;
-
 let lastTenStarted = false;
 let lastTenAttempted = false;
-
 let lastTenDisplayed = null;
-
 let quoteMode = "before";
-
 let beforeQuotes = [];
 let birthdayQuotes = [];
 let afterQuotes = [];
-
 let previousQuoteIndices = {
     before: -1,
     after: -1
 };
 
 
-/* ========================================
-   LOAD QUOTES
-======================================== */
-
 async function loadQuotes(file) {
-
     try {
-
         const response = await fetch(`quotes/${file}`);
-
         if (!response.ok) {
             throw new Error(`Unable to load ${file}`);
         }
-
         const text = await response.text();
-
         return text
             .split(/\r?\n/)
             .map(quote => quote.trim())
             .filter(quote => quote.length > 0);
 
     } catch (error) {
-
         console.error(error);
-
         return [];
-
     }
 }
 
 
 async function loadAllQuotes() {
-
     [
         beforeQuotes,
         birthdayQuotes,
@@ -256,102 +160,56 @@ async function loadAllQuotes() {
         loadQuotes("afterbd.txt")
 
     ]);
-
-    // Display a quote according to the current stage
     updateQuote();
 
 }
 
-
-/* ========================================
-   DISPLAY QUOTE WITH ANIMATION
-======================================== */
-
 function displayQuote(quote) {
-
     if (!quote) return;
-
     tagElement.classList.remove("quote-animate");
-
-    // Restart CSS animation
     void tagElement.offsetWidth;
-
     tagElement.textContent = quote;
-
     tagElement.classList.add("quote-animate");
-
 }
 
-
-/* ========================================
-   RANDOM QUOTE SELECTION
-======================================== */
-
 function getRandomQuote(quotes, type) {
-
     if (quotes.length === 0) return "";
-
     if (quotes.length === 1) {
         return quotes[0];
     }
-
     let randomIndex;
-
     do {
-
         randomIndex = Math.floor(
             Math.random() * quotes.length
         );
-
     } while (
         randomIndex === previousQuoteIndices[type]
     );
-
     previousQuoteIndices[type] = randomIndex;
-
     return quotes[randomIndex];
-
 }
-
-
-/* ========================================
-   BEFORE AND AFTER BIRTHDAY QUOTES
-======================================== */
-
 function updateQuote() {
-
     if (quoteMode === "before") {
-
         const quote = getRandomQuote(
             beforeQuotes,
             "before"
         );
-
         if (quote) {
             displayQuote(quote);
         }
 
     }
-
     else if (quoteMode === "after") {
-
         const quote = getRandomQuote(
             afterQuotes,
             "after"
         );
-
         if (quote) {
             displayQuote(quote);
         }
-
     }
-
 }
-
-
-// Change before/after birthday quotes every 5 seconds
 setInterval(() => {
-
     if (
         quoteMode === "before" ||
         quoteMode === "after"
@@ -362,83 +220,54 @@ setInterval(() => {
 }, 5000);
 
 
-/* ========================================
-   FINAL 10 SECONDS QUOTES
-======================================== */
+let lastTenQuoteDisplayed = -1;
 
 function updateLastTenQuote(diff) {
-
-    // Remaining seconds: 10, 9, 8 ... 1
     const remainingSeconds = Math.ceil(diff / 1000);
 
-    const quoteIndex = 10 - remainingSeconds;
+    // Spread available quotes across all 10 seconds
+    if (birthdayQuotes.length > 0) {
+        const quoteIndex = Math.min(
+            birthdayQuotes.length - 1,
+            Math.floor(
+                ((10 - remainingSeconds) * birthdayQuotes.length) / 10
+            )
+        );
 
-    // Display birthday quotes sequentially
-    if (birthdayQuotes[quoteIndex]) {
-
-        displayQuote(birthdayQuotes[quoteIndex]);
-
+        // Display each quote only once
+        if (lastTenQuoteDisplayed !== quoteIndex) {
+            displayQuote(birthdayQuotes[quoteIndex]);
+            lastTenQuoteDisplayed = quoteIndex;
+        }
     }
 
-    // Update numerical countdown only when the second changes
+    // Update countdown number
     if (lastTenDisplayed !== remainingSeconds) {
-
         lastTenElement.textContent = remainingSeconds;
-
         lastTenDisplayed = remainingSeconds;
-
     }
-
 }
 
 
-/* ========================================
-   MUSIC START
-======================================== */
-
 musicButton.addEventListener("click", async () => {
-
     musicButton.disabled = true;
-
-    musicButton.innerHTML =
-        '<span>♫ Opening your little universe...</span>';
-
+    musicButton.innerHTML = '<span>♫ Opening your little universe...</span>';
     try {
-
         await music.play();
-
     } catch (error) {
-
         console.warn("Music could not start:", error);
-
-        musicButton.innerHTML =
-            '<span>♫ Continue to your surprise ♡</span>';
-
+        musicButton.innerHTML = '<span>♫ Continue to your surprise ♡</span>';
         musicButton.disabled = false;
-
         return;
-
     }
-
     musicStarted = true;
-
-    // Hide music start screen
     musicPopup.classList.add("hidden");
-
-    // Start the correct audio/countdown stage
     updateCountdown();
-
-    // Show birthday popup if birthday has already arrived
     if (Date.now() >= targetDate) {
         showBirthdayPopup();
     }
-
 });
 
-
-/* ========================================
-   LAST 10 SECONDS AUDIO MANAGEMENT
-======================================== */
 
 function manageAudio(diff) {
 
@@ -607,6 +436,7 @@ function celebrateBirthday() {
 
     // Immediately display after-birthday quote
     updateQuote();
+    updateCountdown();
 
     // Show birthday popup when music has started
     showBirthdayPopup();
